@@ -116,12 +116,21 @@ def download_pdf():
             doc_url = f"https://www.naturalgasintel.com{view_issue_href}"
         print(f"前往文件頁面: {doc_url}")
 
-        # 連結會直接觸發 PDF 下載，用 expect_download() 接住
-        with page.expect_download() as download_info:
-            page.goto(doc_url)
-        download = download_info.value
-        download.save_as(pdf_path)
-        print(f"PDF 下載完成，大小: {os.path.getsize(pdf_path)} bytes")
+        # 用 requests 帶 cookie 直接下載 PDF（不透過 Playwright）
+        cookies = context.cookies()
+        session = requests.Session()
+        for cookie in cookies:
+            session.cookies.set(cookie["name"], cookie["value"])
+        session.headers.update({
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            "Referer": "https://www.naturalgasintel.com/news/daily-gas-price-index/",
+        })
+        pdf_response = session.get(doc_url, allow_redirects=True)
+        print(f"下載狀態: {pdf_response.status_code}, Content-Type: {pdf_response.headers.get('Content-Type')}, 大小: {len(pdf_response.content)} bytes")
+
+        with open(pdf_path, "wb") as f:
+            f.write(pdf_response.content)
+        print(f"PDF 儲存完成: {pdf_path}")
 
         browser.close()
 
