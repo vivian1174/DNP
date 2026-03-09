@@ -30,7 +30,10 @@ def download_pdf():
         # 登入
         page.goto("https://www.natgasintel.com/login/")
         page.wait_for_load_state("networkidle")
+        # 等待輸入欄位出現（最多60秒，應對 JS 動態渲染）
+        page.wait_for_selector('input[name="username"]', timeout=60000)
         page.fill('input[name="username"]', NGI_USERNAME)
+        page.wait_for_selector('input[name="password"]', timeout=60000)
         page.fill('input[name="password"]', NGI_PASSWORD)
         page.click('button[type="submit"]')
         page.wait_for_load_state("networkidle")
