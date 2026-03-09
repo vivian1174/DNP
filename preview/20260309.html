@@ -51,13 +51,13 @@
 
   <div class="section">
     <h2>新聞摘要</h2>
-    <div class="summary">LNG：美以攻擊伊朗後，卡達關閉Ras Laffan設施，影響全球1/4 LNG供應。歐洲TTF期貨漲64%，亞洲現貨價創新高。
+    <div class="summary">LNG：美以攻擊伊朗導致卡達關閉拉斯拉凡設施，影響全球1/4 LNG供應，亞洲受衝擊最大
 
-價格：中東戰爭風險推升能源價格，四月期貨漲18.3美分至3.186美元。冬季合約大漲，東北部最為明顯。
+價格：中東戰爭風險推升天然氣價格，4月期貨漲至$3.186，冬季期貨突破$4.5
 
-天氣：春季暖空氣將席捲美國大部，中西部和東南部氣溫將比正常高20-30度，短期需求預計大幅下降。
+天氣：美國大部分地區氣溫將高於平均20-30度，春季需求疲軟，東北部價格大跌
 
-非天氣因素需求：NextDecade推進Rio Grande LNG專案，預計2027年上半年投產，可能增加100 Bcf/d需求。</div>
+政策：美國準備對伊朗持續軍事行動至少100天，川普要求伊朗無條件投降</div>
   </div>
 
   <button class="btn" id="sendBtn" onclick="sendToLine()">
@@ -69,7 +69,7 @@
 <script>
 const GITHUB_PAT = "";
 const GITHUB_REPO = "vivian1174/DNP";
-const MESSAGE = '今日天然氣新聞摘要 (2026年03月09日)\n\n【價格數據】\nHenry Hub (現貨)：3.115 USD/MMBtu\nPrompt Futures：3.186 USD/MMBtu\n1-Year Strip：3.916\nSummer 2026：3.5\nWinter 2026/2027：4.5\nNational Avg：2.075\n\n【新聞摘要】\nLNG：美以攻擊伊朗後，卡達關閉Ras Laffan設施，影響全球1/4 LNG供應。歐洲TTF期貨漲64%，亞洲現貨價創新高。\n\n價格：中東戰爭風險推升能源價格，四月期貨漲18.3美分至3.186美元。冬季合約大漲，東北部最為明顯。\n\n天氣：春季暖空氣將席捲美國大部，中西部和東南部氣溫將比正常高20-30度，短期需求預計大幅下降。\n\n非天氣因素需求：NextDecade推進Rio Grande LNG專案，預計2027年上半年投產，可能增加100 Bcf/d需求。';
+const MESSAGE = '今日天然氣新聞摘要 (2026年03月09日)\n\n【價格數據】\nHenry Hub (現貨)：3.115 USD/MMBtu\nPrompt Futures：3.186 USD/MMBtu\n1-Year Strip：3.916\nSummer 2026：3.5\nWinter 2026/2027：4.5\nNational Avg：2.075\n\n【新聞摘要】\nLNG：美以攻擊伊朗導致卡達關閉拉斯拉凡設施，影響全球1/4 LNG供應，亞洲受衝擊最大\n\n價格：中東戰爭風險推升天然氣價格，4月期貨漲至$3.186，冬季期貨突破$4.5\n\n天氣：美國大部分地區氣溫將高於平均20-30度，春季需求疲軟，東北部價格大跌\n\n政策：美國準備對伊朗持續軍事行動至少100天，川普要求伊朗無條件投降';
 
 async function sendToLine() {
   const btn = document.getElementById('sendBtn');
@@ -84,7 +84,7 @@ async function sendToLine() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + GITHUB_PAT,
+          'Authorization': 'Bearer ' + MY_GITHUB_PAT,
           'Accept': 'application/vnd.github.v3+json'
         },
         body: JSON.stringify({
