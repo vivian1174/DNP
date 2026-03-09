@@ -1,0 +1,37 @@
+name: Daily NGI Summary
+
+on:
+  schedule:
+    # 台灣時間早上 9:30 = UTC 01:30
+    - cron: '30 1 * * 1-5'  # 週一到週五
+  workflow_dispatch:  # 允許手動觸發（測試用）
+
+jobs:
+  run-summary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install anthropic requests playwright
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run summary script
+        env:
+          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          NGI_USERNAME: ${{ secrets.NGI_USERNAME }}
+          NGI_PASSWORD: ${{ secrets.NGI_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: python main.py
