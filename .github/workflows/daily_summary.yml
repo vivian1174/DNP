@@ -36,6 +36,7 @@ jobs:
           NGI_PASSWORD: ${{ secrets.NGI_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
         run: python main.py
 
       - name: Upload debug screenshot (if exists)
