@@ -23,12 +23,33 @@ def download_pdf():
     pdf_path = f"NGI_daily_{today}.pdf"
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        context = browser.new_context(ignore_https_errors=True)
+        browser = p.chromium.launch(
+            headless=True,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu",
+            ]
+        )
+        context = browser.new_context(
+            ignore_https_errors=True,
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            viewport={"width": 1280, "height": 800},
+            locale="en-US",
+            timezone_id="America/New_York",
+            extra_http_headers={
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            }
+        )
+        # 隱藏 webdriver 特徵
+        browser.add_init_script = None  # placeholder
+
         page = context.new_page()
 
         # 登入
-        page.goto("https://www.naturalgasintel.com/account/login/")
+        page.goto("https://naturalgasintel.com/login/")
         page.wait_for_load_state("networkidle")
         # 截圖 debug：看 Playwright 實際看到什麼
         page.screenshot(path="debug_login.png", full_page=True)
@@ -38,14 +59,17 @@ def download_pdf():
         print("頁面 HTML:", page.content()[:2000])
         # 等待輸入欄位出現（最多60秒，應對 JS 動態渲染）
         page.wait_for_selector('input[name="username"]', timeout=60000)
+        page.wait_for_timeout(1000)  # 模仿真人停頓
         page.fill('input[name="username"]', NGI_USERNAME)
+        page.wait_for_timeout(500)
         page.wait_for_selector('input[name="password"]', timeout=60000)
         page.fill('input[name="password"]', NGI_PASSWORD)
+        page.wait_for_timeout(500)
         page.click('button[type="submit"]')
         page.wait_for_load_state("networkidle")
 
         # 前往 Daily Gas Price Index 頁面
-        page.goto("https://www.naturalgasintel.com/news/daily-gas-price-index/")
+        page.goto("https://naturalgasintel.com/news/daily-gas-price-index/")
         page.wait_for_load_state("networkidle")
 
         # 防呆：檢查下拉選單的最新日期是否是今天
