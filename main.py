@@ -30,6 +30,12 @@ def download_pdf():
         # 登入
         page.goto("https://www.natgasintel.com/login/")
         page.wait_for_load_state("networkidle")
+        # 截圖 debug：看 Playwright 實際看到什麼
+        page.screenshot(path="debug_login.png", full_page=True)
+        print("頁面標題:", page.title())
+        print("頁面 URL:", page.url)
+        # 印出頁面 HTML 前 2000 字
+        print("頁面 HTML:", page.content()[:2000])
         # 等待輸入欄位出現（最多60秒，應對 JS 動態渲染）
         page.wait_for_selector('input[name="username"]', timeout=60000)
         page.fill('input[name="username"]', NGI_USERNAME)
