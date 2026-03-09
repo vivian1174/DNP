@@ -240,6 +240,8 @@ National Avg：{prices.get('national_avg', 'N/A')}
 {summary}"""
 
     # 產生預覽 HTML
+    my_github_pat = os.environ.get('MY_GITHUB_PAT', '')
+    github_repo = os.environ.get('GITHUB_REPO', '')
     html_content = f"""<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -303,8 +305,8 @@ National Avg：{prices.get('national_avg', 'N/A')}
 </div>
 
 <script>
-const GITHUB_PAT = "{os.environ.get('MY_GITHUB_PAT', '')}";
-const GITHUB_REPO = "{os.environ.get('GITHUB_REPO', '')}";
+const GITHUB_PAT = "{my_github_pat}";
+const GITHUB_REPO = "{github_repo}";
 const MESSAGE = {repr(line_message)};
 
 async function sendToLine() {{
@@ -320,7 +322,7 @@ async function sendToLine() {{
         method: 'POST',
         headers: {{
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + MY_GITHUB_PAT,
+          'Authorization': 'Bearer ' + GITHUB_PAT,
           'Accept': 'application/vnd.github.v3+json'
         }},
         body: JSON.stringify({{
