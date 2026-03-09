@@ -320,7 +320,7 @@ async function sendToLine() {{
         method: 'POST',
         headers: {{
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + GITHUB_PAT,
+          'Authorization': 'Bearer ' + MY_GITHUB_PAT,
           'Accept': 'application/vnd.github.v3+json'
         }},
         body: JSON.stringify({{
