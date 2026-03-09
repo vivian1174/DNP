@@ -49,7 +49,7 @@ def download_pdf():
         page = context.new_page()
 
         # 登入
-        page.goto("https://naturalgasintel.com/login/")
+        page.goto("https://www.naturalgasintel.com/account/login/")
         page.wait_for_load_state("networkidle")
         # 截圖 debug：看 Playwright 實際看到什麼
         page.screenshot(path="debug_login.png", full_page=True)
