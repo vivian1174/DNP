@@ -28,7 +28,7 @@ def download_pdf():
         page = context.new_page()
 
         # 登入
-        page.goto("https://www.natgasintel.com/login/")
+        page.goto("https://www.naturalgasintel.com/account/login/")
         page.wait_for_load_state("networkidle")
         # 截圖 debug：看 Playwright 實際看到什麼
         page.screenshot(path="debug_login.png", full_page=True)
@@ -45,7 +45,7 @@ def download_pdf():
         page.wait_for_load_state("networkidle")
 
         # 前往 Daily Gas Price Index 頁面
-        page.goto("https://www.natgasintel.com/news/daily-gas-price-index/")
+        page.goto("https://www.naturalgasintel.com/news/daily-gas-price-index/")
         page.wait_for_load_state("networkidle")
 
         # 防呆：檢查下拉選單的最新日期是否是今天
