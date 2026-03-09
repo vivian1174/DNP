@@ -24,7 +24,7 @@ def download_pdf():
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        context = browser.new_context()
+        context = browser.new_context(ignore_https_errors=True)
         page = context.new_page()
 
         # 登入
