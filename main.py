@@ -116,23 +116,12 @@ def download_pdf():
             doc_url = f"https://www.naturalgasintel.com{view_issue_href}"
         print(f"前往文件頁面: {doc_url}")
 
-        # 直接導航到文件頁面
-        page.goto(doc_url)
-        page.wait_for_load_state("networkidle")
-        print(f"文件頁面 URL: {page.url}")
-        print(f"文件頁面標題: {page.title()}")
-        page.screenshot(path="debug_login.png", full_page=True)
-
-        # 取得帶 cookie 的 session 下載 PDF
-        cookies = context.cookies()
-        session = requests.Session()
-        for cookie in cookies:
-            session.cookies.set(cookie["name"], cookie["value"])
-        pdf_response = session.get(page.url)
-        print(f"PDF 下載狀態: {pdf_response.status_code}, 大小: {len(pdf_response.content)} bytes")
-
-        with open(pdf_path, "wb") as f:
-            f.write(pdf_response.content)
+        # 連結會直接觸發 PDF 下載，用 expect_download() 接住
+        with page.expect_download() as download_info:
+            page.goto(doc_url)
+        download = download_info.value
+        download.save_as(pdf_path)
+        print(f"PDF 下載完成，大小: {os.path.getsize(pdf_path)} bytes")
 
         browser.close()
 
