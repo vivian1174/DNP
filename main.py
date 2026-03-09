@@ -150,12 +150,10 @@ def process_pdf(pdf_path):
 請找出最新一天的以下價格，以 JSON 格式輸出：
 {
   "date": "YYYY-MM-DD",
-  "henry_hub_spot": 數字,
   "prompt_futures": 數字,
-  "one_year_strip": 數字,
-  "summer_2026": 數字,
-  "winter_2026_2027": 數字,
-  "national_avg": 數字
+  "henry_hub_spot": 數字,
+  "Columbia gulf mainline_spot": 數字,
+  "Texas gas Zone 1_spot": 數字,
 }
 
 **第二部分：新聞摘要**
