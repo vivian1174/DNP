@@ -67,6 +67,18 @@ def download_pdf():
         page.wait_for_timeout(500)
         page.click('button[type="submit"]')
         page.wait_for_load_state("networkidle")
+        page.wait_for_timeout(2000)
+
+        # 確認登入成功
+        print("登入後 URL:", page.url)
+        print("登入後標題:", page.title())
+        if "login" in page.url or "sign-in" in page.url:
+            # 截圖看錯誤訊息
+            page.screenshot(path="debug_login.png", full_page=True)
+            # 印出表單錯誤
+            error_text = page.locator(".errorlist, .alert, .error, [class*='error']").all_text_contents()
+            print("登入錯誤訊息:", error_text)
+            raise Exception(f"登入失敗，仍在登入頁: {page.url}")
 
         # 前往 Daily Gas Price Index 頁面
         page.goto("https://www.naturalgasintel.com/news/daily-gas-price-index/")
@@ -93,21 +105,31 @@ def download_pdf():
                 f"網站最新為 {latest_date}（可能為美國假日）"
             )
 
-        # 點擊 "View Issue" 按鈕，等待 PDF 出現
-        with page.expect_popup() as popup_info:
-            page.click("a:has-text('View Issue')")
-        pdf_page = popup_info.value
-        pdf_page.wait_for_load_state("networkidle")
+        # 取得 View Issue 的連結網址
+        view_issue_href = page.locator("a:has-text('View Issue')").get_attribute("href")
+        print(f"View Issue href: {view_issue_href}")
 
-        # 取得 PDF URL 並下載（帶登入 cookie）
-        pdf_url = pdf_page.url
-        print(f"PDF URL: {pdf_url}")
+        # 組成完整 PDF 頁面 URL
+        if view_issue_href.startswith("http"):
+            doc_url = view_issue_href
+        else:
+            doc_url = f"https://www.naturalgasintel.com{view_issue_href}"
+        print(f"前往文件頁面: {doc_url}")
 
+        # 直接導航到文件頁面
+        page.goto(doc_url)
+        page.wait_for_load_state("networkidle")
+        print(f"文件頁面 URL: {page.url}")
+        print(f"文件頁面標題: {page.title()}")
+        page.screenshot(path="debug_login.png", full_page=True)
+
+        # 取得帶 cookie 的 session 下載 PDF
         cookies = context.cookies()
         session = requests.Session()
         for cookie in cookies:
             session.cookies.set(cookie["name"], cookie["value"])
-        pdf_response = session.get(pdf_url)
+        pdf_response = session.get(page.url)
+        print(f"PDF 下載狀態: {pdf_response.status_code}, 大小: {len(pdf_response.content)} bytes")
 
         with open(pdf_path, "wb") as f:
             f.write(pdf_response.content)
