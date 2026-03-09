@@ -3,7 +3,7 @@ name: Daily NGI Summary
 on:
   schedule:
     # 台灣時間早上 7:00 = UTC 11:00
-    - cron: '00 23 * * 1-5'  # 週一到週五
+    - cron: '00 23 * * 0-4'  # 週一到週五
   workflow_dispatch:  # 允許手動觸發（測試用）
 
 jobs:
