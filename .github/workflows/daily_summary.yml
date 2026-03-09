@@ -2,8 +2,8 @@ name: Daily NGI Summary
 
 on:
   schedule:
-    # 台灣時間早上 7:00 = UTC 11:00
-    - cron: '00 23 * * 0-4'  # 週一到週五
+    # 台灣時間早上 7:00 = UTC 前一天 23:00
+    - cron: '0 23 * * 0-4'  # UTC 週日~週四（= 台灣週一~週五早上 7:00）
   workflow_dispatch:  # 允許手動觸發（測試用）
 
 jobs:
@@ -35,3 +35,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
         run: python main.py
+
+      - name: Upload debug screenshot (if exists)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshot
+          path: debug_login.png
+          if-no-files-found: ignore
