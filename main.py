@@ -150,24 +150,19 @@ def process_pdf(pdf_path):
 請找出最新一天的以下價格，以 JSON 格式輸出：
 {
   "date": "YYYY-MM-DD",
-  "prompt_futures": 數字,
   "henry_hub_spot": 數字,
-  "Columbia gulf mainline_spot": 數字,
-  "Texas gas Zone 1_spot": 數字,
+  "prompt_futures": 數字,
+  "one_year_strip": 數字,
+  "summer_2026": 數字,
+  "winter_2026_2027": 數字,
+  "national_avg": 數字
 }
 
 **第二部分：新聞摘要**
-Here is today’s full natural gas news article. Please follow the steps below to create the summary:
-1.First, summarize strictly based on the news content in English. Do not add external information.
-2.Organize the summary under the following six themes: LNG, Price, Production/Storage, Policy, Weather, Non-weather demand.
- Focus on near-term and short-term information. If unavailable, then include long-term information.
- If the news does not mention a certain theme, simply omit it. Don't be too short and avoid overly general statements.
-3.Keep each summary point within 50 words (English).
-4.After completing the English summary, translate it fully into Traditional Chinese (Taiwan usage), keeping it professional, concise, and fluent. Ensure that all six themes are translated completely into Chinese if they appear. Do not omit any theme.
-5.Ensure consistency in describing market directions (price up/down) without contradictions.
-6.Only output the final full summary in Traditional Chinese (Taiwan usage). Do not output the English version.
+根據 PDF 中的新聞內容，依以下六個主題整理摘要（繁體中文，台灣用語）。
+每個主題限 50 字以內，沒提到的主題直接省略。
 
-Final Output Format (in Traditional Chinese):
+格式：
 LNG：摘要內容
 價格：摘要內容
 產量/儲量：摘要內容
@@ -308,7 +303,8 @@ National Avg：{prices.get('national_avg', 'N/A')}
 </div>
 
 <script>
-const LINE_TOKEN = "{os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', '')}";
+const GITHUB_PAT = "{os.environ.get('GITHUB_PAT', '')}";
+const GITHUB_REPO = "{os.environ.get('GITHUB_REPO', '')}";
 const MESSAGE = {repr(line_message)};
 
 async function sendToLine() {{
@@ -318,23 +314,29 @@ async function sendToLine() {{
   btn.textContent = '發送中...';
 
   try {{
-    const response = await fetch('https://api.line.me/v2/bot/message/broadcast', {{
-      method: 'POST',
-      headers: {{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + LINE_TOKEN
-      }},
-      body: JSON.stringify({{
-        messages: [{{ type: 'text', text: MESSAGE }}]
-      }})
-    }});
+    const response = await fetch(
+      `https://api.github.com/repos/${{GITHUB_REPO}}/actions/workflows/send_line.yml/dispatches`,
+      {{
+        method: 'POST',
+        headers: {{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + GITHUB_PAT,
+          'Accept': 'application/vnd.github.v3+json'
+        }},
+        body: JSON.stringify({{
+          ref: 'main',
+          inputs: {{ message: MESSAGE }}
+        }})
+      }}
+    );
 
-    if (response.ok) {{
+    if (response.status === 204) {{
       btn.textContent = '✅ 已發送！';
       btn.style.background = '#888';
       status.textContent = '訊息已成功發送到 LINE';
     }} else {{
-      throw new Error('HTTP ' + response.status);
+      const err = await response.text();
+      throw new Error('HTTP ' + response.status + ': ' + err);
     }}
   }} catch (e) {{
     btn.disabled = false;
