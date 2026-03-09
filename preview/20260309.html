@@ -40,74 +40,31 @@
       </div>
       <div class="price-item">
         <div class="price-label">1-Year Strip</div>
-        <div class="price-value">3.916</div>
+        <div class="price-value">N/A</div>
       </div>
       <div class="price-item">
         <div class="price-label">National Avg</div>
-        <div class="price-value">2.075</div>
+        <div class="price-value">N/A</div>
       </div>
     </div>
   </div>
 
   <div class="section">
     <h2>新聞摘要</h2>
-    <div class="summary">LNG：美以攻擊伊朗致卡達關閉 Ras Laffan，全球 LNG 供應減少 25%，歐亞價格飆升。
+    <div class="summary">LNG：美國和以色列對伊朗的軍事攻擊導致中東緊張局勢升級，卡達能源暫停了拉斯拉凡工業區的LNG生產，影響全球約四分之一的LNG供應。卡達能源執行長表示，衝突完全結束後可能需要數週才能恢復生產。美國LNG出口需求保持強勁，每日約19 Bcf。
 
-價格：中東戰爭風險推升天然氣期貨，四月合約升至 $3.186，冬季合約漲幅更大。
+價格：受中東戰爭風險影響，4月Henry Hub期貨上漲18.3美分至3.186美元/MMBtu，週漲幅32.7美分。WTI原油本週飆升超過30%。冬季2026/27期貨合約持續上漲，東北部Algonquin Citygate冬季價格上漲1.479美元至12.180美元。Henry Hub現貨價格回升至3.115美元。
 
-天氣：全美氣溫偏暖，中西部至東南部高於正常 20-30 度，壓抑近期暖氣需求。
+產量/儲量：美國天然氣產量維持在110 Bcf/d的歷史高點附近。2月27日當週儲量減少132 Bcf，預計隨著春季溫暖天氣，未來幾週提取量將大幅下降。Wood Mackenzie預估未來一週需求將降至80-82 Bcf/d。
 
-政策：五角大廈準備對伊朗持續作戰至少 100 天，川普要求無條件投降。</div>
+政策：五角大樓準備維持對伊朗的軍事行動至少100天，可能持續到9月。川普總統表示除非伊朗「無條件投降」，否則不會達成協議。持續的衝突可能對全球能源市場造成長期壓力。
+
+天氣：美國大部分地區迎來異常溫暖的春季天氣，從大平原到東部地區氣溫遠高於平均水準，廣泛出現70-80華氏度高溫。NatGasWeather預測3月15-20日北部地區將有冷空氣移入，但近期暖化趨勢將抑制供暖需求。
+
+非天氣因素需求：地緣政治衝擊使能源市場聯動性增強，石油價格飆升帶動天然氣期貨上漲。投資者將石油和天然氣作為能源板塊投資組合的一部分，當地緣政治風險推動原油期貨大量買入時，同時也會在天然氣和能源股票建立部位。</div>
   </div>
 
-  <button class="btn" id="sendBtn" onclick="sendToLine()">
-    📤 發送到 LINE
-  </button>
-  <div class="status" id="status"></div>
+  <div class="status">✅ 已自動發送到 LINE</div>
 </div>
-
-<script>
-const GITHUB_PAT = "";
-const GITHUB_REPO = "vivian1174/DNP";
-const MESSAGE = '今日天然氣新聞摘要 (2026年03月09日)\n\n【價格數據】\nHenry Hub (現貨)：3.115 USD/MMBtu\nPrompt Futures：3.186 USD/MMBtu\n1-Year Strip：3.916\nSummer 2026：3.5\nWinter 2026/2027：4.5\nNational Avg：2.075\n\n【新聞摘要】\nLNG：美以攻擊伊朗致卡達關閉 Ras Laffan，全球 LNG 供應減少 25%，歐亞價格飆升。\n\n價格：中東戰爭風險推升天然氣期貨，四月合約升至 $3.186，冬季合約漲幅更大。\n\n天氣：全美氣溫偏暖，中西部至東南部高於正常 20-30 度，壓抑近期暖氣需求。\n\n政策：五角大廈準備對伊朗持續作戰至少 100 天，川普要求無條件投降。';
-
-async function sendToLine() {
-  const btn = document.getElementById('sendBtn');
-  const status = document.getElementById('status');
-  btn.disabled = true;
-  btn.textContent = '發送中...';
-
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/send_line.yml/dispatches`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + GITHUB_PAT,
-          'Accept': 'application/vnd.github.v3+json'
-        },
-        body: JSON.stringify({
-          ref: 'main',
-          inputs: { message: MESSAGE }
-        })
-      }
-    );
-
-    if (response.status === 204) {
-      btn.textContent = '✅ 已發送！';
-      btn.style.background = '#888';
-      status.textContent = '訊息已成功發送到 LINE';
-    } else {
-      const err = await response.text();
-      throw new Error('HTTP ' + response.status + ': ' + err);
-    }
-  } catch (e) {
-    btn.disabled = false;
-    btn.textContent = '📤 發送到 LINE';
-    status.textContent = '❌ 發送失敗：' + e.message;
-  }
-}
-</script>
 </body>
 </html>
