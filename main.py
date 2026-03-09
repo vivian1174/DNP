@@ -159,8 +159,15 @@ def process_pdf(pdf_path):
 }
 
 **第二部分：新聞摘要**
-根據 PDF 中的新聞內容，依以下六個主題整理摘要（繁體中文，台灣用語）。
-每個主題限 50 字以內，沒提到的主題直接省略。
+Here is today’s full natural gas news article. Please follow the steps below to create the summary:
+1.First, summarize strictly based on the news content in English. Do not add external information.
+2.Organize the summary under the following six themes: LNG, Price, Production/Storage, Policy, Weather, Non-weather demand.
+ Focus on near-term and short-term information. If unavailable, then include long-term information.
+ If the news does not mention a certain theme, simply omit it. Don't be too short and avoid overly general statements.
+3.Keep each summary point within 50 words (English).
+4.After completing the English summary, translate it fully into Traditional Chinese (Taiwan usage), keeping it professional, concise, and fluent. Ensure that all six themes are translated completely into Chinese if they appear. Do not omit any theme.
+5.Ensure consistency in describing market directions (price up/down) without contradictions.
+6.Only output the final full summary in Traditional Chinese (Taiwan usage). Do not output the English version.
 
 格式：
 LNG：摘要內容
