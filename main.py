@@ -150,10 +150,10 @@ def process_pdf(pdf_path):
 請找出最新一天的以下價格，以 JSON 格式輸出：
 {
   "date": "YYYY-MM-DD",
-  "prompt_futures": 數字,
   "henry_hub_spot": 數字,
-  "Columbia Gulf mainline": 數字,
-  "Texas Gas Zone 1": 數字,
+  "prompt_futures": 數字,
+  "columbia_gulf_mainline": 數字,
+  "texas_gas_zone_1": 數字
 }
 
 **第二部分：新聞摘要**
@@ -165,7 +165,7 @@ Here is today’s full natural gas news article. Please follow the steps below t
 3.Keep each summary point within 50 words (English).
 4.After completing the English summary, translate it fully into Traditional Chinese (Taiwan usage), keeping it professional, concise, and fluent. Ensure that all six themes are translated completely into Chinese if they appear. Do not omit any theme.
 5.Ensure consistency in describing market directions (price up/down) without contradictions.
-6.Only output the final full summary in Traditional Chinese (Taiwan usage). Do not output the English version.
+6.Only output the final full summary in Traditional Chinese (Taiwan usage). Do not output the English version.**
 
 格式：
 LNG：摘要內容
@@ -236,10 +236,8 @@ def push_preview_to_github(prices, summary):
 【價格數據】
 Henry Hub (現貨)：{prices.get('henry_hub_spot', 'N/A')} USD/MMBtu
 Prompt Futures：{prices.get('prompt_futures', 'N/A')} USD/MMBtu
-1-Year Strip：{prices.get('one_year_strip', 'N/A')}
-Summer 2026：{prices.get('summer_2026', 'N/A')}
-Winter 2026/2027：{prices.get('winter_2026_2027', 'N/A')}
-National Avg：{prices.get('national_avg', 'N/A')}
+Columbia Gulf Mainline：{prices.get('columbia_gulf_mainline', 'N/A')}
+Texas Gas Zone 1：{prices.get('texas_gas_zone_1', 'N/A')}
 
 【新聞摘要】
 {summary}"""
@@ -288,12 +286,12 @@ National Avg：{prices.get('national_avg', 'N/A')}
         <div class="price-value">{prices.get('prompt_futures', 'N/A')}</div>
       </div>
       <div class="price-item">
-        <div class="price-label">1-Year Strip</div>
-        <div class="price-value">{prices.get('one_year_strip', 'N/A')}</div>
+        <div class="price-label">Columbia Gulf Mainline</div>
+        <div class="price-value">{prices.get('columbia_gulf_mainline', 'N/A')}</div>
       </div>
       <div class="price-item">
-        <div class="price-label">National Avg</div>
-        <div class="price-value">{prices.get('national_avg', 'N/A')}</div>
+        <div class="price-label">Texas Gas Zone 1</div>
+        <div class="price-value">{prices.get('texas_gas_zone_1', 'N/A')}</div>
       </div>
     </div>
   </div>
