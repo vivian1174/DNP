@@ -72,15 +72,25 @@ def download_pdf():
         page.goto("https://www.naturalgasintel.com/news/daily-gas-price-index/")
         page.wait_for_load_state("networkidle")
 
-        # 防呆：檢查下拉選單的最新日期是否是今天
+        # 防呆：從下拉選單的 value 裡取出日期（格式: /protected_documents/dg20260309/）
         latest_date_option = page.locator("select option").first.get_attribute("value")
         print(f"網站最新日期: {latest_date_option}，今天: {today_display}")
 
-        if latest_date_option != today_display:
+        # 從路徑取出日期，例如 dg20260309 -> 2026-03-09
+        import re
+        date_match = re.search(r'dg(\d{4})(\d{2})(\d{2})', latest_date_option or "")
+        if date_match:
+            latest_date = f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}"
+        else:
+            latest_date = latest_date_option  # fallback
+
+        print(f"解析後最新日期: {latest_date}，今天: {today_display}")
+
+        if latest_date != today_display:
             browser.close()
             raise NoIssueToday(
                 f"今日（{today_display}）無新聞，"
-                f"網站最新為 {latest_date_option}（可能為美國假日）"
+                f"網站最新為 {latest_date}（可能為美國假日）"
             )
 
         # 點擊 "View Issue" 按鈕，等待 PDF 出現
