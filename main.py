@@ -303,7 +303,7 @@ National Avg：{prices.get('national_avg', 'N/A')}
 </div>
 
 <script>
-const GITHUB_PAT = "{os.environ.get('GITHUB_PAT', '')}";
+const GITHUB_PAT = "{os.environ.get('MY_GITHUB_PAT', '')}";
 const GITHUB_REPO = "{os.environ.get('GITHUB_REPO', '')}";
 const MESSAGE = {repr(line_message)};
 
