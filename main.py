@@ -11,9 +11,15 @@ LINE_CHANNEL_ACCESS_TOKEN = os.environ["LINE_CHANNEL_ACCESS_TOKEN"]
 NGI_USERNAME = os.environ["NGI_USERNAME"]
 NGI_PASSWORD = os.environ["NGI_PASSWORD"]
 
+class NoIssueToday(Exception):
+    """當天沒有新聞發布時拋出此例外（美國假日等）"""
+    pass
+
+
 # === 登入並下載 PDF ===
 def download_pdf():
     today = datetime.now().strftime("%Y%m%d")
+    today_display = datetime.now().strftime("%Y-%m-%d")
     pdf_path = f"NGI_daily_{today}.pdf"
 
     with sync_playwright() as p:
@@ -23,21 +29,45 @@ def download_pdf():
 
         # 登入
         page.goto("https://www.natgasintel.com/login/")
+        page.wait_for_load_state("networkidle")
         page.fill('input[name="username"]', NGI_USERNAME)
         page.fill('input[name="password"]', NGI_PASSWORD)
         page.click('button[type="submit"]')
         page.wait_for_load_state("networkidle")
 
-        # 前往每日 PDF 下載頁
-        page.goto("https://www.natgasintel.com/daily-gas-price-index/")
+        # 前往 Daily Gas Price Index 頁面
+        page.goto("https://www.natgasintel.com/news/daily-gas-price-index/")
         page.wait_for_load_state("networkidle")
 
-        # 找到當日 PDF 連結並下載
-        with page.expect_download() as download_info:
-            # 根據實際網頁結構調整 selector
-            page.click("a[href*='NGI_daily_index']")
-        download = download_info.value
-        download.save_as(pdf_path)
+        # 防呆：檢查下拉選單的最新日期是否是今天
+        latest_date_option = page.locator("select option").first.get_attribute("value")
+        print(f"網站最新日期: {latest_date_option}，今天: {today_display}")
+
+        if latest_date_option != today_display:
+            browser.close()
+            raise NoIssueToday(
+                f"今日（{today_display}）無新聞，"
+                f"網站最新為 {latest_date_option}（可能為美國假日）"
+            )
+
+        # 點擊 "View Issue" 按鈕，等待 PDF 出現
+        with page.expect_popup() as popup_info:
+            page.click("button:has-text('View Issue')")
+        pdf_page = popup_info.value
+        pdf_page.wait_for_load_state("networkidle")
+
+        # 取得 PDF URL 並下載（帶登入 cookie）
+        pdf_url = pdf_page.url
+        print(f"PDF URL: {pdf_url}")
+
+        cookies = context.cookies()
+        session = requests.Session()
+        for cookie in cookies:
+            session.cookies.set(cookie["name"], cookie["value"])
+        pdf_response = session.get(pdf_url)
+
+        with open(pdf_path, "wb") as f:
+            f.write(pdf_response.content)
 
         browser.close()
 
@@ -307,7 +337,7 @@ Prompt Futures: {prices.get('prompt_futures', 'N/A')}
 # === 主程式 ===
 if __name__ == "__main__":
     try:
-        # 1. 下載 PDF
+        # 1. 下載 PDF（若今天無新聞會拋出 NoIssueToday）
         pdf_path = download_pdf()
 
         # 2. Claude 讀 PDF
@@ -326,8 +356,25 @@ if __name__ == "__main__":
 
         print("🎉 全部完成！")
 
+    except NoIssueToday as e:
+        # 假日或無新聞：靜默通知，不算錯誤
+        print(f"ℹ️ {e}")
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {LINE_CHANNEL_ACCESS_TOKEN}"
+        }
+        requests.post(
+            "https://api.line.me/v2/bot/message/push",
+            headers=headers,
+            json={
+                "to": os.environ["LINE_USER_ID"],
+                "messages": [{"type": "text", "text": f"📭 {str(e)}\n今日不發送摘要。"}]
+            }
+        )
+
     except Exception as e:
-        # 發生錯誤時也通知你
+        # 真正的錯誤：通知你並拋出讓 GitHub Actions 標記失敗
+        print(f"❌ 發生錯誤: {e}")
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {LINE_CHANNEL_ACCESS_TOKEN}"
