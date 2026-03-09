@@ -51,17 +51,13 @@
 
   <div class="section">
     <h2>新聞摘要</h2>
-    <div class="summary">LNG：美國LNG主導地位引發全球關注，前Cheniere執行長Souki稱美國能源技術領先全球。卡達因中東戰爭關閉Ras Laffan工業園區，影響全球四分之一LNG供應，CEO警告若戰爭延長可能推升油價至每桶150美元。Cedar LNG項目建設進度超過35%，預計2028年底啟動。NextDecade的Rio Grande LNG項目時程提前，第一列火車可能在2027年上半年開始生產。
+    <div class="summary">LNG：美以攻擊伊朗後，卡達關閉Ras Laffan設施，影響全球1/4 LNG供應。歐洲TTF期貨漲64%，亞洲現貨價創新高。
 
-價格：受中東緊張局勢升級影響，四月期天然氣期貨上漲18.3美分至每百萬英熱單位3.186美元，週漲幅32.7美分。Henry Hub現貨價格回升至3美元以上，上漲23美分至3.115美元。冬季2026/27期貨合約週漲幅達22.5美分至4.770美元。東北地區現貨價格大幅下跌，Algonquin Citygate下跌2.695美元。
+價格：中東戰爭風險推升能源價格，四月期貨漲18.3美分至3.186美元。冬季合約大漲，東北部最為明顯。
 
-產量/儲量：美國48州天然氣產量維持在每日1100億立方英尺的歷史高位附近。上週儲量報告顯示撤回1320億立方英尺，預計隨著春季需求減弱，未來幾週撤回量將大幅下降。西加拿大沉積盆地天然氣供應成為未來LNG擴張的關鍵因素。
+天氣：春季暖空氣將席捲美國大部，中西部和東南部氣溫將比正常高20-30度，短期需求預計大幅下降。
 
-政策：美國國防部準備維持對伊朗的軍事行動至少100天，可能持續到九月。川普總統表示除非伊朗「無條件投降」，否則不會達成協議。中東衝突導致霍爾木茲海峽能源運輸受阻，影響全球20%石油和主要LNG運輸。
-
-天氣：美國大部分地區本週末將出現遠高於平均的溫度，大平原至東部地區氣溫將達70-80華氏度。春季溫暖天氣預計將使供暖需求每日減少約70億立方英尺。NatGasWeather預測3月15-20日北部州將有冷空氣移入。
-
-非天氣因素需求：LNG出口需求預計維持在每日190億立方英尺左右。Golden Pass LNG出口終端正在德州提升產能，Corpus Christi LNG第三階段擴建項目第五列火車首次生產LNG。若中東衝突持續，可能加強美國LNG需求並影響國內供應。</div>
+非天氣因素需求：NextDecade推進Rio Grande LNG專案，預計2027年上半年投產，可能增加100 Bcf/d需求。</div>
   </div>
 
   <button class="btn" id="sendBtn" onclick="sendToLine()">
@@ -71,8 +67,9 @@
 </div>
 
 <script>
-const LINE_TOKEN = "pbQxI9Wv+SWUNWLRH9g3aG+BZajrU4n1FuFhtYe6miXeFTh068m606GtBKhMrDbMJojJtjYvfHLXBwtSbpRzfTx3VohD+Kf0rrTRhiRx3TLflOMxsGFYKrBjIUMVGZkQIhQsoLTe31aUpuXx8JcUYAdB04t89/1O/w1cDnyilFU=";
-const MESSAGE = '今日天然氣新聞摘要 (2026年03月09日)\n\n【價格數據】\nHenry Hub (現貨)：3.115 USD/MMBtu\nPrompt Futures：3.186 USD/MMBtu\n1-Year Strip：3.916\nSummer 2026：3.5\nWinter 2026/2027：4.5\nNational Avg：2.075\n\n【新聞摘要】\nLNG：美國LNG主導地位引發全球關注，前Cheniere執行長Souki稱美國能源技術領先全球。卡達因中東戰爭關閉Ras Laffan工業園區，影響全球四分之一LNG供應，CEO警告若戰爭延長可能推升油價至每桶150美元。Cedar LNG項目建設進度超過35%，預計2028年底啟動。NextDecade的Rio Grande LNG項目時程提前，第一列火車可能在2027年上半年開始生產。\n\n價格：受中東緊張局勢升級影響，四月期天然氣期貨上漲18.3美分至每百萬英熱單位3.186美元，週漲幅32.7美分。Henry Hub現貨價格回升至3美元以上，上漲23美分至3.115美元。冬季2026/27期貨合約週漲幅達22.5美分至4.770美元。東北地區現貨價格大幅下跌，Algonquin Citygate下跌2.695美元。\n\n產量/儲量：美國48州天然氣產量維持在每日1100億立方英尺的歷史高位附近。上週儲量報告顯示撤回1320億立方英尺，預計隨著春季需求減弱，未來幾週撤回量將大幅下降。西加拿大沉積盆地天然氣供應成為未來LNG擴張的關鍵因素。\n\n政策：美國國防部準備維持對伊朗的軍事行動至少100天，可能持續到九月。川普總統表示除非伊朗「無條件投降」，否則不會達成協議。中東衝突導致霍爾木茲海峽能源運輸受阻，影響全球20%石油和主要LNG運輸。\n\n天氣：美國大部分地區本週末將出現遠高於平均的溫度，大平原至東部地區氣溫將達70-80華氏度。春季溫暖天氣預計將使供暖需求每日減少約70億立方英尺。NatGasWeather預測3月15-20日北部州將有冷空氣移入。\n\n非天氣因素需求：LNG出口需求預計維持在每日190億立方英尺左右。Golden Pass LNG出口終端正在德州提升產能，Corpus Christi LNG第三階段擴建項目第五列火車首次生產LNG。若中東衝突持續，可能加強美國LNG需求並影響國內供應。';
+const GITHUB_PAT = "";
+const GITHUB_REPO = "vivian1174/DNP";
+const MESSAGE = '今日天然氣新聞摘要 (2026年03月09日)\n\n【價格數據】\nHenry Hub (現貨)：3.115 USD/MMBtu\nPrompt Futures：3.186 USD/MMBtu\n1-Year Strip：3.916\nSummer 2026：3.5\nWinter 2026/2027：4.5\nNational Avg：2.075\n\n【新聞摘要】\nLNG：美以攻擊伊朗後，卡達關閉Ras Laffan設施，影響全球1/4 LNG供應。歐洲TTF期貨漲64%，亞洲現貨價創新高。\n\n價格：中東戰爭風險推升能源價格，四月期貨漲18.3美分至3.186美元。冬季合約大漲，東北部最為明顯。\n\n天氣：春季暖空氣將席捲美國大部，中西部和東南部氣溫將比正常高20-30度，短期需求預計大幅下降。\n\n非天氣因素需求：NextDecade推進Rio Grande LNG專案，預計2027年上半年投產，可能增加100 Bcf/d需求。';
 
 async function sendToLine() {
   const btn = document.getElementById('sendBtn');
@@ -81,23 +78,29 @@ async function sendToLine() {
   btn.textContent = '發送中...';
 
   try {
-    const response = await fetch('https://api.line.me/v2/bot/message/broadcast', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + LINE_TOKEN
-      },
-      body: JSON.stringify({
-        messages: [{ type: 'text', text: MESSAGE }]
-      })
-    });
+    const response = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/send_line.yml/dispatches`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + GITHUB_PAT,
+          'Accept': 'application/vnd.github.v3+json'
+        },
+        body: JSON.stringify({
+          ref: 'main',
+          inputs: { message: MESSAGE }
+        })
+      }
+    );
 
-    if (response.ok) {
+    if (response.status === 204) {
       btn.textContent = '✅ 已發送！';
       btn.style.background = '#888';
       status.textContent = '訊息已成功發送到 LINE';
     } else {
-      throw new Error('HTTP ' + response.status);
+      const err = await response.text();
+      throw new Error('HTTP ' + response.status + ': ' + err);
     }
   } catch (e) {
     btn.disabled = false;
