@@ -95,7 +95,7 @@ def download_pdf():
 
         # 點擊 "View Issue" 按鈕，等待 PDF 出現
         with page.expect_popup() as popup_info:
-            page.click("button:has-text('View Issue')")
+            page.click("a:has-text('View Issue')")
         pdf_page = popup_info.value
         pdf_page.wait_for_load_state("networkidle")
 
