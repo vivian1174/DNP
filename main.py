@@ -69,7 +69,7 @@ def download_pdf():
         page.wait_for_load_state("networkidle")
 
         # 前往 Daily Gas Price Index 頁面
-        page.goto("https://naturalgasintel.com/news/daily-gas-price-index/")
+        page.goto("https://www.naturalgasintel.com/news/daily-gas-price-index/")
         page.wait_for_load_state("networkidle")
 
         # 防呆：檢查下拉選單的最新日期是否是今天
