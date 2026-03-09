@@ -150,12 +150,10 @@ def process_pdf(pdf_path):
 請找出最新一天的以下價格，以 JSON 格式輸出：
 {
   "date": "YYYY-MM-DD",
-  "henry_hub_spot": 數字,
   "prompt_futures": 數字,
-  "one_year_strip": 數字,
-  "summer_2026": 數字,
-  "winter_2026_2027": 數字,
-  "national_avg": 數字
+  "henry_hub_spot": 數字,
+  "Columbia Gulf mainline": 數字,
+  "Texas Gas Zone 1": 數字,
 }
 
 **第二部分：新聞摘要**
@@ -305,55 +303,8 @@ National Avg：{prices.get('national_avg', 'N/A')}
     <div class="summary">{summary}</div>
   </div>
 
-  <button class="btn" id="sendBtn" onclick="sendToLine()">
-    📤 發送到 LINE
-  </button>
-  <div class="status" id="status"></div>
+  <div class="status">✅ 已自動發送到 LINE</div>
 </div>
-
-<script>
-const GITHUB_PAT = "{my_github_pat}";
-const GITHUB_REPO = "{github_repo}";
-const MESSAGE = {repr(line_message)};
-
-async function sendToLine() {{
-  const btn = document.getElementById('sendBtn');
-  const status = document.getElementById('status');
-  btn.disabled = true;
-  btn.textContent = '發送中...';
-
-  try {{
-    const response = await fetch(
-      `https://api.github.com/repos/${{GITHUB_REPO}}/actions/workflows/send_line.yml/dispatches`,
-      {{
-        method: 'POST',
-        headers: {{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + GITHUB_PAT,
-          'Accept': 'application/vnd.github.v3+json'
-        }},
-        body: JSON.stringify({{
-          ref: 'main',
-          inputs: {{ message: MESSAGE }}
-        }})
-      }}
-    );
-
-    if (response.status === 204) {{
-      btn.textContent = '✅ 已發送！';
-      btn.style.background = '#888';
-      status.textContent = '訊息已成功發送到 LINE';
-    }} else {{
-      const err = await response.text();
-      throw new Error('HTTP ' + response.status + ': ' + err);
-    }}
-  }} catch (e) {{
-    btn.disabled = false;
-    btn.textContent = '📤 發送到 LINE';
-    status.textContent = '❌ 發送失敗：' + e.message;
-  }}
-}}
-</script>
 </body>
 </html>"""
 
@@ -386,7 +337,7 @@ async function sendToLine() {{
         username = github_repo.split("/")[0]
         preview_url = f"https://{username}.github.io/{repo_name}/preview/{today_key}.html"
         print(f"✅ 預覽頁面已上傳: {preview_url}")
-        return preview_url
+        return preview_url, line_message
     else:
         raise Exception(f"GitHub 上傳失敗: {res.text}")
 
@@ -428,10 +379,23 @@ if __name__ == "__main__":
         print("摘要:", summary[:100], "...")
 
         # 4. 推上 GitHub Pages
-        preview_url = push_preview_to_github(prices, summary)
+        preview_url, line_message = push_preview_to_github(prices, summary)
 
-        # 5. LINE 私訊你預覽連結
-        send_preview_link(preview_url, prices)
+        # 5. LINE broadcast 給所有好友
+        headers_line = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {LINE_CHANNEL_ACCESS_TOKEN}"
+        }
+        r = requests.post("https://api.line.me/v2/bot/message/broadcast", headers=headers_line, json={
+            "messages": [{"type": "text", "text": line_message}]
+        })
+        print("✅ LINE broadcast 狀態:", r.status_code)
+
+        # 私訊管理員確認
+        requests.post("https://api.line.me/v2/bot/message/push", headers=headers_line, json={
+            "to": os.environ["LINE_USER_ID"],
+            "messages": [{"type": "text", "text": f"✅ 今日摘要已自動發送\n預覽：{preview_url}"}]
+        })
 
         print("🎉 全部完成！")
 
