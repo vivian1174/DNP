@@ -168,6 +168,7 @@ Here is today’s full natural gas news article. Please follow the steps below t
 4.After completing the English summary, translate it fully into Traditional Chinese (Taiwan usage), keeping it professional, concise, and fluent. Ensure that all six themes are translated completely into Chinese if they appear. Do not omit any theme.
 5.Ensure consistency in describing market directions (price up/down) without contradictions.
 6.Only output the final full summary in Traditional Chinese (Taiwan usage). Do not output the English version.
+7.以下是專有名詞的翻譯對照表，請在翻譯時使用這些對照表中的中文詞彙：荷姆茲海峽	Strait of Hormuz;入料氣	Feed Gas;接收站	LNG Terminal;儲槽	Storage Tank;
 
 格式：
 LNG：摘要內容
