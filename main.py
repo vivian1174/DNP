@@ -100,12 +100,12 @@ def download_pdf():
 
         print(f"解析後最新日期: {latest_date}，今天: {today_display}")
 
-        if latest_date != today_display:
-            browser.close()
-            raise NoIssueToday(
-                f"今日（{today_display}）無新聞，"
-                f"網站最新為 {latest_date}（可能為美國假日）"
-            )
+        #if latest_date != today_display:
+            #browser.close()
+            #raise NoIssueToday(
+                #f"今日（{today_display}）無新聞，"
+                #f"網站最新為 {latest_date}（可能為美國假日）"
+            #)
 
         # 取得 View Issue 的連結網址
         view_issue_href = page.locator("a:has-text('View Issue')").get_attribute("href")
